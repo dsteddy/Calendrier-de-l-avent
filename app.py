@@ -86,7 +86,7 @@ def afficher_info_recette(
     st.subheader(get_info(df, "Nom de la recette"), anchor = False)
     link = get_info(df, "Lien vers la recette")
     image_url = get_info(df, "Lien vers la photo")
-    st.markdown(f'<a href="{link}" target="_blank"><img width="450px" height="225px" style="border_radius: 5%" src="{image_url}" alt="Clickable Image"></a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="{link}" target="_blank"><img width="450px" height="300px" style="border_radius: 5%" src="{image_url}" alt="Clickable Image"></a>', unsafe_allow_html=True)
 
 def afficher_info_cadeau(
         df: pd.DataFrame
@@ -103,7 +103,7 @@ def afficher_info_cadeau(
     st.subheader(get_info(df, "Cadeau_nom"), anchor = False)
     link = get_info(df, 'cadeau_url')
     image_url = get_info(df, 'cadeau_image')
-    st.markdown(f'<a href="{link}" target="_blank"><img width="400px" height="225px" style="border_radius: 5%" src="{image_url}" alt="Clickable Image"></a>', unsafe_allow_html=True)
+    st.markdown(f'<a href="{link}" target="_blank"><img width="400px" height="300px" style="border_radius: 5%" src="{image_url}" alt="Clickable Image"></a>', unsafe_allow_html=True)
 
 def afficher_info_film(
         df: pd.DataFrame
@@ -175,6 +175,30 @@ def get_clicked(
     unique_key = f"click_detector_{jour}"
     return click_detector(content, key=unique_key)
 
+def afficher_info(
+        df: pd.DataFrame,
+        type: str
+):
+    """
+    Appelle la fonction pour afficher les infos suivant le type d'infos demandé.
+    ---
+    Paramètres :
+    df : pd.DataFrame : Le dataframe qui correspond à l'item demandé.
+    type : str : Nom du type d'infos demandé
+    ---
+    Retourne :
+    Appelle la fonction correspondante pour afficher les infos.
+    """
+    if type == "recette":
+        afficher_info_recette(df)
+    if type == "film":
+        afficher_info_film(df)
+    if type == "cadeau":
+        afficher_info_cadeau(df)
+    if type == "musique":
+        afficher_info_musique(df)
+
+
 # Début de la page.
 # Si aucun bouton n'a été cliqué.
 if st.session_state["button_clicked"] == False:
@@ -208,27 +232,27 @@ else:
         with col6:
             st.header("Film : ", anchor = False)
             movie_du_jour = choix_item_du_jour(df_film, jour, "Titre")
-            afficher_info_film(movie_du_jour)
+            afficher_info(movie_du_jour, "film")
         with col7:
             st.header("Musique : ", anchor = False)
             musique_du_jour = choix_item_du_jour(df_music, jour, "title")
-            afficher_info_musique(musique_du_jour)
+            afficher_info(musique_du_jour, "musique")
         with col8:
             st.header("Idée cadeaux :", anchor = False)
             cadeau_du_jour = choix_item_du_jour(df_cadeaux, jour, "Cadeau_nom")
-            afficher_info_cadeau(cadeau_du_jour)
+            afficher_info(cadeau_du_jour, "cadeau")
         st.divider()
         st.markdown("<h3 style='text-align: center; color: white;'>Suggestion de recettes</h3>", unsafe_allow_html=True)
         col9, col10, col11 = st.columns(3)
         with col9:
             moins_30_du_jour = choix_item_du_jour(df_moins_30, jour, "Nom de la recette")
-            afficher_info_recette(moins_30_du_jour)
+            afficher_info(moins_30_du_jour, "recette")
         with col10:
             plat_du_jour = choix_item_du_jour(df_plat_principal, jour, "Nom de la recette")
-            afficher_info_recette(plat_du_jour)
+            afficher_info(plat_du_jour, "recette")
         with col11:
             dessert_du_jour = choix_item_du_jour(df_dessert, jour, "Nom de la recette")
-            afficher_info_recette(dessert_du_jour)
+            afficher_info(dessert_du_jour, "recette")
         st.divider()
     else :
         # Vidéo spéciale pour le 24 décembre.
